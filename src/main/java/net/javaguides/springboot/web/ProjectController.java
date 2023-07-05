@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -69,24 +70,68 @@ public class ProjectController {
         return "user/projects";
     }
 
+    @GetMapping("/filter")
+    public String filterProjects(@RequestParam("filterStartDate") String startDate,
+                                 @RequestParam("filterEndDate") String endDate,
+                                 Model model) {
+        System.out.println("------------------");
+        System.out.println("Fetching Filtered Project List");
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = userService.fetchUserByEmail(loggedInUser.getName()).getUserId();
+        System.out.println("loggedInUser: " + loggedInUser);
+        System.out.println("currentUserId: " + currentUserId);
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
+        Date start = new Date();
+        Date end = new Date();
+        try {
+            start = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+            end = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+        } catch (Exception e) {
+            System.out.println("Error parsing dates");
+        }
+        model.addAttribute("projects", projectService.fetchProjectListFiltered(start, end));
+        model.addAttribute("loggedInUser", currentUserId);
+        System.out.println("------------------");
+//        return "redirect:/project/list";
+        return "user/projects";
+    }
+
     @PostMapping("/save-project")
-    public String saveProject(@ModelAttribute("project") @Valid Project project, @RequestParam("selectedUsers") List<User> selectedUsers, HttpSession session) {
+    public String saveProject(@ModelAttribute("project") @Valid Project project,
+                              @RequestParam("selectedUsers") List<User> selectedUsers,
+                              HttpSession session) {
         Logger logger = Logger.getLogger(ProjectController.class.getName());
         System.out.println("Saving Project");
         System.out.println("selectedUsers: " + selectedUsers);
         System.out.println("Project: " + project);
 
+        // Set project owner
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         User owner = userService.fetchUserByEmail(loggedInUser.getName());
         System.out.println("owner: " + owner);
         project.setOwner(owner);
 
+        // Set project users
         Set<User> users = new HashSet<>(selectedUsers);
         project.setUsers(users);
 
+        // Set project status based on startDate and endDate
+//        Date currentDate = new Date();
+//        if (currentDate.before(project.getStartDate())) {
+//            project.setStatus("PRE");
+//        } else if (currentDate.after(project.getStartDate()) && currentDate.before(project.getEndDate())) {
+//            project.setStatus("START");
+//        } else {
+//            project.setStatus("END");
+//        }
+
+
+        // Save the project
         Project savedProject = projectService.saveProject(project);
         System.out.println("Saved project: " + savedProject);
 
+        // Fetch the saved project
         Project fetchedProject = projectService.fetchProjectById(savedProject.getProjectId());
         System.out.println("Fetched project: " + fetchedProject);
         System.out.println("Fetched project owner: " + fetchedProject.getOwner());
@@ -197,7 +242,7 @@ public class ProjectController {
         return "user/edit-project";
     }
 
-//    update project's name, description, and start and end dates
+    //    update project's name, description, and start and end dates
     @PostMapping("/update-project/{id}")
     public String updateProject(@PathVariable("id") Long id, @RequestParam("projectName") String projectName,
                                 @RequestParam("projectIntro") String projectIntro,

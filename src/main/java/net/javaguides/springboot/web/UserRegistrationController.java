@@ -1,5 +1,6 @@
 package net.javaguides.springboot.web;
 
+import net.javaguides.springboot.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,10 @@ public class UserRegistrationController {
 	
 	@PostMapping
 	public String registerUserAccount(@ModelAttribute("user") UserRegistrationDto registrationDto) {
-		userService.save(registrationDto);
+		User user = userService.save(registrationDto);
+		if (user == null) {
+			return "redirect:/registration?error";
+		}
 		return "redirect:/registration?success";
 	}
 }

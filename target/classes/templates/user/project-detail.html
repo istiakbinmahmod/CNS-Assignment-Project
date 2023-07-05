@@ -50,7 +50,7 @@
     <br>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Users:</h5>
+            <h5 class="card-title">Members:</h5>
             <div class="member-list">
                 <div class="member">
                 <span th:each="member : ${members}">
@@ -114,6 +114,13 @@
         <div class="card-body">
             <h5 class="card-title">End Date:</h5>
             <p class="card-text" th:text="${#dates.format(project.endDate, 'dd MMMM yyyy')}">-</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Status:</h5>
+            <p class="card-text" th:text="${project.status}">-</p>
         </div>
     </div>
     <br>
