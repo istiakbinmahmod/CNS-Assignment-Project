@@ -66,7 +66,7 @@
             <div class="container">
                 <h4 class="mb-4">Create New Project</h4>
                 <form action="#" method="post" th:action="@{/project/save-project}" th:object="${project}"
-                      class="needs-validation" novalidate>
+                      class="needs-validation" novalidate onsubmit="return validateForm()">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -113,7 +113,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="selectedUsers" class="form-label">Add Users (Maximum 5)</label>
-                                <select class="form-select" id="selectedUsers" name="selectedUsers" multiple>
+                                <select class="form-select" id="selectedUsers" name="selectedUsers" multiple required>
                                     <!-- List of available users -->
                                     <th:block th:each="user: ${userList}">
                                         <option th:value="${user.id}"
@@ -136,6 +136,17 @@
         </div>
     </div>
 </div>
+<!--                            <div class="mb-3">-->
+<!--                                <button type="submit" class="btn btn-primary">Create Project</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
 
 <script src="/webjars/bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -193,6 +204,30 @@
         }
     });
 </script>
+
+<script>
+    function validateForm() {
+        const nameInput = document.getElementById("name");
+        const introInput = document.getElementById("intro");
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        const selectedUsersInput = document.getElementById("selectedUsers");
+
+        if (
+            nameInput.value.trim() === "" ||
+            introInput.value.trim() === "" ||
+            startDateInput.value.trim() === "" ||
+            endDateInput.value.trim() === "" ||
+            selectedUsersInput.value.length === 0
+        ) {
+            alert("Please fill in all required fields.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
 
 </body>
 

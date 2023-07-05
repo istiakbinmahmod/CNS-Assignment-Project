@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="ie=edge" http-equiv="x-ua-compatible">
-    <title>Create New Project</title>
+    <title>Edit Project</title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link th:href="@{/webjars/bootstrap/5.0.2/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/webjars/font-awesome/5.11.2/css/all.css}" rel="stylesheet">
@@ -35,41 +35,47 @@
     <h2>Edit Project</h2>
     <form th:action="@{/project/update-project/{id}(id=${project.id})}" method="post" class="needs-validation"
           novalidate>
-
         <div class="form-group">
             <label for="projectName">Project Name</label>
-            <input type="text" class="form-control" id="projectName" name="projectName">
+            <input type="text" class="form-control" id="projectName" name="projectName" th:value="${project.name}"
+                   required>
             <div class="invalid-feedback">
                 Please enter the project name.
             </div>
         </div>
         <div class="form-group">
             <label for="projectIntro">Project Introduction</label>
-            <textarea class="form-control" id="projectIntro" name="projectIntro" rows="4"></textarea>
+            <textarea class="form-control" id="projectIntro" name="projectIntro" rows="4" required th:text="${project.intro}">
+            </textarea>
             <div class="invalid-feedback">
                 Please enter the project introduction.
             </div>
         </div>
         <div class="form-group">
             <label for="startDate">Start Date</label>
-            <input type="date" class="form-control" id="startDate" name="startDate">
+            <input type="date" class="form-control" id="startDate" name="startDate"
+                   th:value="${#dates.format(project.startDate, 'yyyy-MM-dd')}" required>
             <div class="invalid-feedback">
                 Please enter the start date.
             </div>
         </div>
         <div class="form-group">
             <label for="endDate">End Date</label>
-            <input type="date" class="form-control" id="endDate" name="endDate">
+            <input type="date" class="form-control" id="endDate" name="endDate"
+                   th:value="${#dates.format(project.endDate, 'yyyy-MM-dd')}" required>
             <div class="invalid-feedback">
                 Please enter the end date.
             </div>
         </div>
-
-
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.0/dist/umd/popper.min.js"
+        integrity="sha384-AHSGN0qGOLrRLb5x5dD/j6pNEZiGZPKlElgTz+04RWlHS0glC9AVst6FhtyA49ho"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-pzjch/0q97iKvCbPwZL4Hn3Ib1yy7T8k4u0lrrmvXya4ftcyddq3e4I4iO9Adq4g"
+        crossorigin="anonymous"></script>
 </body>
 </html>
