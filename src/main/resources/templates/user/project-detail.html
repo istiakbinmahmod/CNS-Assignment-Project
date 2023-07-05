@@ -105,7 +105,7 @@
     </div>
     <br>
 
-    <div class="card" th:if="${!memberFull}">
+    <div class="card" th:if="${!memberFull and editPermission}">
         <div class="card-body">
             <h5 class="card-title">Add Member</h5>
             <form th:action="@{/project/add-member/{projectId}(projectId=${project.id})}"
@@ -131,7 +131,7 @@
 
     <br>
 
-    <div class="card" th:if="${!memberEmpty}">
+    <div class="card" th:if="${!memberEmpty and editPermission}">
         <div class="card-body">
             <h5 class="card-title">Delete Member</h5>
             <form th:action="@{/project/delete-member/{projectId}(projectId=${project.id})}"

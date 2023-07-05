@@ -50,7 +50,7 @@ public class ProjectController {
 
     @PostMapping("/save-project")
     public String saveProject(@ModelAttribute("project") Project project,
-                              @RequestParam("selectedUsers") List<Long> selectedUsers) {
+                              @RequestParam(value = "selectedUsers", required = false) List<Long> selectedUsers) {
 
         // Set project owner
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
@@ -59,11 +59,13 @@ public class ProjectController {
 
         System.out.println(project.getId());
 
-        // Set project users
-        Set<User> users = new HashSet<>(userService.fetchAllUsersById(selectedUsers));
-//        project.setMembers(users);
-
-        projectService.addMembersToProject(project, users);
+        // Set project members
+//        Set<User> users = new HashSet<>(userService.fetchAllUsersById(selectedUsers));
+//        projectService.addMembersToProject(project, users);
+        if (selectedUsers != null && !selectedUsers.isEmpty()) {
+            Set<User> users = new HashSet<>(userService.fetchAllUsersById(selectedUsers));
+            projectService.addMembersToProject(project, users);
+        }
 
         // Save the project
         Project savedProject = projectService.saveProject(project);
@@ -76,14 +78,10 @@ public class ProjectController {
     public String filterProjects(@RequestParam("filterStartDate") String startDate,
                                  @RequestParam("filterEndDate") String endDate,
                                  Model model) {
-        System.out.println("------------------");
-        System.out.println("Fetching Filtered Project List");
+
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = userService.fetchUserByEmail(loggedInUser.getName()).getId();
-        System.out.println("loggedInUser: " + loggedInUser);
-        System.out.println("currentUserId: " + currentUserId);
-        System.out.println("startDate: " + startDate);
-        System.out.println("endDate: " + endDate);
+
         Date start = new Date();
         Date end = new Date();
         try {
@@ -94,7 +92,6 @@ public class ProjectController {
         }
         model.addAttribute("projects", projectService.fetchProjectListFiltered(start, end));
         model.addAttribute("loggedInUser", currentUserId);
-        System.out.println("------------------");
 //        return "redirect:/project/list";
         return "user/projects";
     }
@@ -102,6 +99,15 @@ public class ProjectController {
 
     @GetMapping("/delete/{id}")
     public String deleteProject(@PathVariable("id") Long id) {
+        if (!checkIfAuthorized(id)) {
+            return "user/error";
+        }
+
+        Project project = projectService.fetchProjectById(id);
+        if (project == null) {
+            return "user/error";
+        }
+
         userService.deleteProjectById(id);
         projectService.deleteProject(id);
         return "redirect:/project/list";
@@ -109,15 +115,15 @@ public class ProjectController {
 
     @GetMapping("/details/{id}")
     public String projectDetails(@PathVariable("id") Long id, Model model) {
-        System.out.println("------------------");
-        System.out.println("Showing Project Details");
-        System.out.println("Project id: " + id);
+
         Project project = projectService.fetchProjectById(id);
-        System.out.println("Project: " + project);
-//        System.out.println(project);
+
+        if (project == null) {
+            return "user/error";
+        }
+
         User owner = project.getOwner();
         Collection<User> members = project.getMembers();
-        System.out.println("members: " + members);
 
         List<User> userList = userService.fetchUserList();
         model.addAttribute("userList", userList);
@@ -128,40 +134,28 @@ public class ProjectController {
 
         int memberCount = members.size();
         boolean memberEmpty = memberCount == 0;
-        System.out.println("memberCountIsZero: " + memberEmpty);
         boolean memberFull = memberCount >= 5;
-        System.out.println("memberFull: " + memberFull);
-        System.out.println("memberCount: " + memberCount);
-        // find the userNames from userList set
-        // name is formed by joining firstName and lastName
-//        List<String> userNames = members.stream()
-//                .map(user -> user.getFirstName() + " " + user.getLastName())
-//                .collect(Collectors.toList());
 
-//        List<String> userNames = userList.stream().map(user -> user.getFirstName() + " " + user.getLastName()).toList();
         model.addAttribute("project", project);
         model.addAttribute("owner", owner);
         model.addAttribute("members", members);
         model.addAttribute("nonMembers", nonMembers);
-        model.addAttribute("memberCount", memberCount);
         model.addAttribute("memberEmpty", memberEmpty);
         model.addAttribute("memberFull", memberFull);
-        System.out.println("------------------");
+        model.addAttribute("editPermission", checkIfAuthorized(id));
+
         return "user/project-detail";
     }
 
     @PostMapping("/add-member/{projectId}")
     public String addMember(@PathVariable("projectId") Long projectId, @RequestParam("selectedUser") Long userId) {
 
+        if (!checkIfAuthorized(projectId)) return "user/error";
+
         Project project = projectService.fetchProjectById(projectId);
+        if(project == null) return "user/error";
+
         User user = userService.fetchUserById(userId);
-//        Set<User> members = project.getMembers();
-//        members.add(user);
-//        project.setMembers(members);
-//        projectService.updateProject(project);
-//        Project p = projectService.fetchProjectById(projectId);
-//        System.out.println("Final project: " + p);
-//        System.out.println("------------------");
         user.getProjects().add(project);
         userService.saveUser(user);
         return "redirect:/project/details/" + projectId;
@@ -170,16 +164,15 @@ public class ProjectController {
     @PostMapping("/delete-member/{projectId}")
     public String removeMember(@PathVariable("projectId") Long projectId, @RequestParam("deletedUser") Long userId) {
 
+        if (!checkIfAuthorized(projectId)) return "user/error";
+
         Project project = projectService.fetchProjectById(projectId);
+        if(project == null) return "user/error";
+
         User user = userService.fetchUserById(userId);
 
         user.getProjects().remove(project);
         userService.saveUser(user);
-
-//        Set<User> members = project.getMembers();
-//        members.remove(user);
-//        project.setMembers(members);
-//        projectService.updateProject(project);
 
         return "redirect:/project/details/" + projectId;
     }
@@ -187,9 +180,11 @@ public class ProjectController {
     @GetMapping("/edit/{id}")
     public String editProject(@PathVariable("id") Long id, Model model) {
 
-        if(checkIfAuthorized(id)) return "error";
+        if (!checkIfAuthorized(id)) return "user/error";
 
         Project project = projectService.fetchProjectById(id);
+        if (project == null) return "user/error";
+
         model.addAttribute("project", project);
         return "user/edit-project";
     }
@@ -201,36 +196,27 @@ public class ProjectController {
                                 @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
                                 @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
                                 Model model) {
-        System.out.println("------------------");
-        System.out.println("Updating Project");
-        System.out.println("Project id: " + id);
-        System.out.println("Project name: " + projectName);
-        System.out.println("Project intro: " + projectIntro);
-        System.out.println("Project start date: " + startDate);
-        System.out.println("Project end date: " + endDate);
+
+        if (!checkIfAuthorized(id)) return "user/error";
+
         Project project = projectService.fetchProjectById(id);
-        System.out.println("Project: " + project);
         project.setName(projectName);
         project.setIntro(projectIntro);
         project.setStartDate(startDate);
         project.setEndDate(endDate);
         projectService.updateProject(project);
-//        System.out.println("Project: " + project);
-//        if (result.hasErrors()) {
-//            System.out.println("Errors: " + result.getAllErrors());
-//            return "user/edit-project";
-//        }
-//        projectService.updateProject(project);
-        System.out.println("------------------");
         return "redirect:/project/details/" + id;
     }
 
+    //    Checks whether the user is authorized to modify the project
     private boolean checkIfAuthorized(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
-        if(projectService.fetchProjectById(id).getOwner().getEmail().equals(email)) {
-            return false;
+        Project proj = projectService.fetchProjectById(id);
+        if(proj == null) return false;
+        if (proj.getOwner().getEmail().equals(email)) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

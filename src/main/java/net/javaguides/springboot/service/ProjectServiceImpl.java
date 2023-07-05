@@ -22,7 +22,6 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Project saveProject(Project project) {
-        System.out.println("save er age project: " + project);
         return projectRepository.save(project);
     }
 
@@ -33,28 +32,14 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Project fetchProjectById(Long id) {
-        return projectRepository.findById(id).get();
+        return projectRepository.findById(id).orElse(null);
+//        return projectRepository.findById(id).get();
     }
 
     @Override
     public void updateProject(Project project) {
         projectRepository.save(project);
     }
-
-//    @Override
-//    public List<Project> fetchProjectListFiltered(Date startDate, Date endDate) {
-//        List<Project> allProjects = projectRepository.findAll();
-//        Iterator<Project> iterator = allProjects.iterator();
-//
-//        while (iterator.hasNext()) {
-//            Project project = iterator.next();
-//            if (project.getStartDate().before(startDate) || project.getEndDate().after(endDate)) {
-//                iterator.remove();
-//            }
-//        }
-//
-//        return allProjects;
-//    }
 
     @Override
     public List<Project> fetchProjectListFiltered(Date startDate, Date endDate) {
