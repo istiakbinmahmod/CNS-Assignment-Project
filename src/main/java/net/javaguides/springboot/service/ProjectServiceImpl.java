@@ -1,13 +1,12 @@
 package net.javaguides.springboot.service;
 
 import net.javaguides.springboot.model.Project;
+import net.javaguides.springboot.model.User;
 import net.javaguides.springboot.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 
@@ -72,6 +71,21 @@ public class ProjectServiceImpl implements ProjectService{
         return allProjects;
     }
 
+    @Override
+    public boolean addMembersToProject(Project project, Set<User> users) {
+        if(users == null){
+            return false;
+        }
+        for(User a : users) {
+            if(project.getMembers() == null) {
+                project.setMembers(new HashSet<>());
+            } else {
+                project.getMembers().add(a);
+            }
+            a.getProjects().add(project);
+        }
+        return true;
+    }
 
 
 }

@@ -1,192 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org"-->
-<!--      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">-->
-<!--<head>-->
-<!--    &lt;!&ndash;  <meta charset="ISO-8859-1">&ndash;&gt;-->
-<!--    <meta charset="utf-8">-->
-<!--    <meta content="ie=edge" http-equiv="x-ua-compatible">-->
-<!--    <title>Create New Project</title>-->
-<!--    <meta content="width=device-width, initial-scale=1" name="viewport">-->
-<!--    <link th:href="@{/webjars/bootstrap/5.0.2/css/bootstrap.min.css}" rel="stylesheet">-->
-<!--    <link th:href="@{/webjars/font-awesome/5.11.2/css/all.css}" rel="stylesheet">-->
-
-<!--</head>-->
-<!--<body>-->
-<!--&lt;!&ndash; create navigation bar ( header) &ndash;&gt;-->
-<!--<nav class="navbar navbar-expand-lg navbar-dark bg-primary">-->
-<!--    <div class="container">-->
-<!--        <a class="navbar-brand" href="#" th:href="@{/}">CNS</a>-->
-<!--        <a class="navbar-brand" href="#" th:href="@{/project/list}">Projects</a>-->
-<!--        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"-->
-<!--                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--            <span class="navbar-toggler-icon"></span>-->
-<!--        </button>-->
-<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--            <ul class="navbar-nav ml-auto">-->
-<!--                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link text-danger"-->
-<!--                                                                          th:href="@{/logout}">Logout</a></li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</nav>-->
-
-<!--<br>-->
-<!--<br>-->
-
-
-<!--<div class="container my-5">-->
-<!--    <h4>Create New Project</h4>-->
-<!--    <div class="card">-->
-<!--        <div class="col-md-10">-->
-<!--            <form action="#" method="post"-->
-<!--                  th:action="@{/project/save-project}" th:object="${project}" class="needs-validation" novalidate>-->
-<!--                <div class="mb-3">-->
-<!--                    <label for="projectName" class="form-label">Project Name</label>-->
-<!--                    <input type="text" class="form-control" id="projectName" name="projectName"-->
-<!--                           placeholder="Project Name" th:field="*{projectName}" required>-->
-<!--                    <div class="invalid-feedback">-->
-<!--                        Please provide the project name.-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="mb-3">-->
-<!--                    <label for="projectIntro" class="form-label">Project Introduction</label>-->
-<!--                    <input type="text" class="form-control" id="projectIntro" name="projectIntro"-->
-<!--                           placeholder="Project Introduction" th:field="*{projectIntro}" required>-->
-<!--                    <div class="invalid-feedback">-->
-<!--                        Please provide a brief introduction to the project.-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="mb-3">-->
-<!--                    <label for="startDate" class="form-label">Start Date</label>-->
-<!--                    <input type="date" class="form-control" id="startDate" name="startDate" th:field="*{startDate}"-->
-<!--                           required>-->
-<!--                    <div class="invalid-feedback">-->
-<!--                        Please provide the project start date.-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="mb-3">-->
-<!--                    <label for="endDate" class="form-label">End Date</label>-->
-<!--                    <input type="date" class="form-control" id="endDate" name="endDate" th:field="*{endDate}" required>-->
-<!--                    <div class="invalid-feedback">-->
-<!--                        Please provide the project end date.-->
-<!--                    </div>-->
-<!--                    <div id="endDateValidation" class="invalid-feedback">-->
-<!--                        End date must be later than start date.-->
-<!--                    </div>-->
-<!--                </div>-->
-
-
-<!--                <div class="mb-3">-->
-<!--                    <label for="status" class="form-label">Status</label>-->
-<!--                    <input type="text" class="form-control" id="status" name="status" th:field="*{status}" readonly>-->
-<!--                </div>-->
-
-<!--                <script>-->
-<!--                    const startDateInput = document.getElementById("startDate");-->
-<!--                    const endDateInput = document.getElementById("endDate");-->
-<!--                    const statusInput = document.getElementById("status");-->
-
-<!--                    endDateInput.addEventListener("input", updateStatus);-->
-
-<!--                    function updateStatus() {-->
-<!--                        const startDate = new Date(startDateInput.value);-->
-<!--                        const endDate = new Date(endDateInput.value);-->
-<!--                        const currentDate = new Date();-->
-
-<!--                        if (currentDate < startDate) {-->
-<!--                            statusInput.value = "PRE";-->
-<!--                        } else if (currentDate >= startDate && currentDate <= endDate) {-->
-<!--                            statusInput.value = "START";-->
-<!--                        } else {-->
-<!--                            statusInput.value = "END";-->
-<!--                        }-->
-<!--                    }-->
-<!--                </script>-->
-
-
-<!--                <script>-->
-<!--                    const startDateInput = document.getElementById("startDate");-->
-<!--                    const endDateInput = document.getElementById("endDate");-->
-<!--                    const endDateValidation = document.getElementById("endDateValidation");-->
-
-<!--                    endDateInput.addEventListener("input", validateEndDate);-->
-
-<!--                    function validateEndDate() {-->
-<!--                        const startDate = new Date(startDateInput.value);-->
-<!--                        const endDate = new Date(endDateInput.value);-->
-
-<!--                        if (endDate <= startDate) {-->
-<!--                            endDateInput.setCustomValidity("Invalid");-->
-<!--                            endDateValidation.style.display = "block";-->
-<!--                        } else {-->
-<!--                            endDateInput.setCustomValidity("");-->
-<!--                            endDateValidation.style.display = "none";-->
-<!--                        }-->
-<!--                    }-->
-<!--                </script>-->
-
-
-
-<!--&lt;!&ndash;                <div class="mb-3">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <label for="selectedUsers" class="form-label">Add Users (Maximum 5)</label>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <select class="form-select" id="selectedUsers" name="selectedUsers" multiple>&ndash;&gt;-->
-<!--&lt;!&ndash;                        &lt;!&ndash; List of available users &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;                        <th:block th:each="user: ${userList}">&ndash;&gt;-->
-<!--&lt;!&ndash;                            <option th:value="${user.userId}"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    th:text="${user.firstName} + ' ' + ${user.lastName} + '(' + ${user.email} + ')'"></option>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </th:block>&ndash;&gt;-->
-<!--&lt;!&ndash;                        &lt;!&ndash; Add more options as needed &ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;                    </select>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="invalid-feedback">&ndash;&gt;-->
-<!--&lt;!&ndash;                        Please select at least one user.&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-
-<!--                <div class="mb-3">-->
-<!--                    <label for="selectedUsers" class="form-label">Add Members (Maximum 5)</label>-->
-<!--                    <select class="form-select" id="selectedUsers" name="selectedUsers" multiple>-->
-<!--                        &lt;!&ndash; List of available users &ndash;&gt;-->
-<!--                        <option th:each="user: ${userList}" th:value="${user.userId}" th:text="${user.firstName} + ' ' + ${user.lastName} + ' (' + ${user.email} + ')'"></option>-->
-<!--                        &lt;!&ndash; Add more options as needed &ndash;&gt;-->
-<!--                    </select>-->
-<!--                    <div class="invalid-feedback">-->
-<!--                        Please select at least one member.-->
-<!--                    </div>-->
-<!--                </div>-->
-
-
-
-<!--                <div class="mb-3">-->
-<!--                    <button type="submit" class="btn btn-primary">Create Project</button>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--<script th:src="@{/webjars/bootstrap/5.0.2/js/bootstrap.bundle.min.js}"></script>-->
-<!--<script>-->
-<!--    const select = document.getElementById('selectedUsers');-->
-<!--    const maxSelections = 5;-->
-
-<!--    select.addEventListener('change', function () {-->
-<!--        const selectedOptions = Array.from(this.selectedOptions);-->
-
-<!--        if (selectedOptions.length > maxSelections) {-->
-<!--            this.value = selectedOptions.slice(0, maxSelections).map(option => option.value);-->
-<!--        }-->
-
-<!--        for (const option of this.options) {-->
-<!--            option.disabled = selectedOptions.length >= maxSelections && !option.selected;-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
-
-<!--</body>-->
-<!--</html>-->
-
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
@@ -259,17 +70,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="projectName" class="form-label">Project Name</label>
-                                <input type="text" class="form-control" id="projectName" name="projectName"
-                                       placeholder="Project Name" th:field="*{projectName}" required>
+                                <label for="name" class="form-label">Project Name</label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                       placeholder="Project Name" th:field="*{name}" required>
                                 <div class="invalid-feedback">
                                     Please provide the project name.
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="projectIntro" class="form-label">Project Introduction</label>
-                                <input type="text" class="form-control" id="projectIntro" name="projectIntro"
-                                       placeholder="Project Introduction" th:field="*{projectIntro}" required>
+                                <label for="intro" class="form-label">Project Introduction</label>
+                                <input type="text" class="form-control" id="intro" name="intro"
+                                       placeholder="Project Introduction" th:field="*{intro}" required>
                                 <div class="invalid-feedback">
                                     Please provide a brief introduction to the project.
                                 </div>
@@ -305,7 +116,7 @@
                                 <select class="form-select" id="selectedUsers" name="selectedUsers" multiple>
                                     <!-- List of available users -->
                                     <th:block th:each="user: ${userList}">
-                                        <option th:value="${user.userId}"
+                                        <option th:value="${user.id}"
                                                 th:text="${user.firstName} + ' ' + ${user.lastName} + '(' + ${user.email} + ')'">
                                         </option>
                                     </th:block>

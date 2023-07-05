@@ -62,21 +62,6 @@
                                 </div>
                             </div>
                         </form>
-<!--                        <form th:action="@{/project/filter}" method="get">-->
-<!--                            <div class="form-row align-items-center">-->
-<!--                                <div class="col">-->
-<!--                                    <label for="filterStartDate">Start Date:</label>-->
-<!--                                    <input type="date" class="form-control" id="filterStartDate" name="filterStartDate">-->
-<!--                                </div>-->
-<!--                                <div class="col">-->
-<!--                                    <label for="filterEndDate">End Date:</label>-->
-<!--                                    <input type="date" class="form-control" id="filterEndDate" name="filterEndDate">-->
-<!--                                </div>-->
-<!--                                <div class="col-auto">-->
-<!--                                    <button type="submit" class="btn btn-primary">Filter</button>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </form>-->
                     </div>
 
                     <br>
@@ -96,26 +81,35 @@
                             </thead>
                             <tbody>
                             <tr th:each="project : ${projects}">
-                                <td th:text="${project.projectName}"></td>
+                                <td th:text="${project.name}"></td>
                                 <td th:text="${#dates.format(project.startDate, 'dd MMMM yyyy')}"></td>
                                 <td th:text="${#dates.format(project.endDate, 'dd MMMM yyyy')}"></td>
                                 <td>
                                     <a class="btn btn-primary"
-                                       th:href="@{/project/details/{id}(id=${project.projectId})}">
+                                       th:href="@{/project/details/{id}(id=${project.id})}">
                                         <i class="fa fa-info-circle ml-2"></i> Details
                                     </a>
                                 </td>
-                                <td th:if="${loggedInUser == project.owner.userId}">
-                                    <a class="btn btn-primary" th:href="@{/project/edit/{id}(id=${project.projectId})}">
+                                <td th:if="${loggedInUser == project.owner.id}">
+                                    <a class="btn btn-primary" th:href="@{/project/edit/{id}(id=${project.id})}">
                                         <i class="fa fa-edit ml-2"></i> Edit
                                     </a>
                                 </td>
-                                <td th:if="${loggedInUser == project.owner.userId}">
-                                    <a class="btn btn-primary"
-                                       th:href="@{/project/delete/{id}(id=${project.projectId})}">
+<!--                                <td th:if="${loggedInUser == project.owner.id}">-->
+<!--                                    <a class="btn btn-primary"-->
+<!--                                       th:href="@{/project/delete/{id}(id=${project.id})}">-->
+<!--                                        <i class="fa fa-window-close ml-2"></i> Delete-->
+<!--                                    </a>-->
+<!--                                </td>-->
+                                <td th:if="${loggedInUser == project.owner.id}">
+                                    <button class="btn btn-primary" th:attr="onclick='confirmDelete(\'' + ${project.id} + '\')'">
                                         <i class="fa fa-window-close ml-2"></i> Delete
-                                    </a>
+                                    </button>
                                 </td>
+
+
+
+
                             </tr>
                             </tbody>
                         </table>
@@ -125,6 +119,18 @@
         </div>
     </div>
 </div>
+
+
+<script th:inline="javascript">
+    function confirmDelete(projectId) {
+        if (confirm("Are you sure you want to delete this project?")) {
+            window.location.href = '/project/delete/' + projectId;
+        }
+    }
+</script>
+
+
+
 
 </body>
 </html>

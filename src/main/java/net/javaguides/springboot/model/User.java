@@ -1,73 +1,57 @@
 package net.javaguides.springboot.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-@Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+//@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Entity
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotBlank(message = "Please provide first name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank(message = "Please provide last name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @NotBlank(message = "Please provide email")
-    @Email
-    @Column(unique = true)
+    @Column(name = "email")
     private String email;
 
-    @NotBlank(message = "Please provide password")
-    @Size(min = 6)
+    @Column(name = "password")
     private String password;
 
-    //	@ManyToMany(
-//			fetch = FetchType.LAZY,
-//			cascade = {
-//					CascadeType.PERSIST,
-//					CascadeType.MERGE
-//			},
-//			mappedBy = "users"
-//	)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_projects",
             joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "userId"),
+                    name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
-                    name = "project_id", referencedColumnName = "projectId"))
-//    @ManyToMany(fetch = FetchType.LAZY,
-//            cascade = {
-//                    CascadeType.PERSIST,
-//                    CascadeType.MERGE
-//            })
-//    @JoinTable(name = "user_project",
-//            joinColumns = { @JoinColumn(name = "project_id") },
-//            inverseJoinColumns = { @JoinColumn(name = "user_id") })
-    private Collection<Project> projects;
+                    name = "project_id", referencedColumnName = "id"))
+    private Set<Project> projects;
+
+    public User() {
+
+    }
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
     }

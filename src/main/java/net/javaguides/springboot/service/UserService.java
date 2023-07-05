@@ -31,4 +31,7 @@ public interface UserService extends UserDetailsService {
 
 	public User save(UserRegistrationDto registrationDto);
 
+    public List<User> fetchAllUsersById(List<Long> selectedUsers);
+
+	public void deleteProjectById(Long id);
 }

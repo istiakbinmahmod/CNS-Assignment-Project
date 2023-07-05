@@ -46,6 +46,20 @@ public class UserServiceImpl implements UserService{
 		return userRepository.save(user);
 	}
 
+	@Override
+	public List<User> fetchAllUsersById(List<Long> selectedUsers) {
+		return userRepository.findAllById(selectedUsers);
+	}
+
+	@Override
+	public void deleteProjectById(Long id) {
+		Collection<User> users = userRepository.findAll();
+		for (User user : users) {
+			user.getProjects().removeIf(project -> project.getId().equals(id));
+			userRepository.save(user);
+		}
+	}
+
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -58,7 +72,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Project> projects){
-		return projects.stream().map(project -> new SimpleGrantedAuthority(project.getProjectName())).collect(Collectors.toList());
+		return projects.stream().map(project -> new SimpleGrantedAuthority(project.getName())).collect(Collectors.toList());
 	}
 
 	@Override
