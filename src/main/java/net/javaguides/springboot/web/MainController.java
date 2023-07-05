@@ -13,7 +13,6 @@ public class MainController {
 	
 	@GetMapping("/")
 	public String home() {
-//		return "user/projects";
 		return "index";
 	}
 }

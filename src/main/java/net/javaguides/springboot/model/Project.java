@@ -9,8 +9,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -46,7 +49,7 @@ public class Project {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
-//    @ManyToMany(
+    //    @ManyToMany(
 //            fetch = FetchType.LAZY,
 //            cascade = {
 //                    CascadeType.PERSIST,
@@ -64,7 +67,22 @@ public class Project {
 //                    referencedColumnName = "userId"
 //            )
 //    )
-    @ManyToMany(mappedBy = "projects")
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+//            mappedBy = "projects")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "project_user",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+
+//    @ManyToMany(fetch = FetchType.LAZY,
+//            cascade = {
+//                    CascadeType.PERSIST,
+//                    CascadeType.MERGE
+//            },
+//            mappedBy = "projects")
+
     private Set<User> users;
 
 

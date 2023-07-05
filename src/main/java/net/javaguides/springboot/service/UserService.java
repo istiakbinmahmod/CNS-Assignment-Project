@@ -30,4 +30,5 @@ public interface UserService extends UserDetailsService {
 	public User login(String email, String password);
 
 	public User save(UserRegistrationDto registrationDto);
+
 }

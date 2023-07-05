@@ -21,6 +21,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public Project saveProject(Project project) {
+        System.out.println("save er age project: " + project);
         return projectRepository.save(project);
     }
 
@@ -32,6 +33,11 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public Project fetchProjectById(Long id) {
         return projectRepository.findById(id).get();
+    }
+
+    @Override
+    public void updateProject(Project project) {
+        projectRepository.save(project);
     }
 
 

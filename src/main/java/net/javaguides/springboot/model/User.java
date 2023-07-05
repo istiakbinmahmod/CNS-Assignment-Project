@@ -55,6 +55,14 @@ public class User {
                     name = "user_id", referencedColumnName = "userId"),
             inverseJoinColumns = @JoinColumn(
                     name = "project_id", referencedColumnName = "projectId"))
+//    @ManyToMany(fetch = FetchType.LAZY,
+//            cascade = {
+//                    CascadeType.PERSIST,
+//                    CascadeType.MERGE
+//            })
+//    @JoinTable(name = "user_project",
+//            joinColumns = { @JoinColumn(name = "project_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "user_id") })
     private Collection<Project> projects;
 
     public User(String firstName, String lastName, String email, String password) {
@@ -63,12 +71,4 @@ public class User {
         this.email = email;
         this.password = password;
     }
-
-//	public <T> User(String firstName, String lastName, String email, String encode, List<T> list) {
-//		this.firstName = firstName;
-//		this.lastName = lastName;
-//		this.email=email;
-//		this.password=encode;
-//		this.projects = (List<Project>) list;
-//	}
 }

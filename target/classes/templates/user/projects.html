@@ -74,28 +74,41 @@
                             </thead>
                             <tbody>
                             <tr th:each="project : ${projects}">
-<!--                                th:if="${project.startDate &lt;= formattedDate-->
-<!--                                        and project.endDate &gt;= formattedDate}"-->
+                                <!--                                th:if="${project.startDate &lt;= formattedDate-->
+                                <!--                                        and project.endDate &gt;= formattedDate}"-->
                                 <td th:text="${project.projectName}"></td>
-                                <td th:text="${project.startDate}"></td>
-                                <td th:text="${project.endDate}"></td>
+                                <td th:text="${#dates.format(project.startDate, 'dd MMMM yyyy')}"></td>
+                                <td th:text="${#dates.format(project.endDate, 'dd MMMM yyyy')}"></td>
+<!--                                <td th:text="${project.startDate}"></td>-->
+<!--                                <td th:text="${project.endDate}"></td>-->
                                 <td>
                                     <a class="btn btn-primary"
                                        th:href="@{/project/details/{id}(id=${project.projectId})}">
                                         <i class="fa fa-info-circle ml-2"></i> Details
                                     </a>
                                 </td>
-                                <td>
+                                <td th:if="${loggedInUser == project.owner.userId}">
                                     <a class="btn btn-primary" th:href="@{/project/edit/{id}(id=${project.projectId})}">
                                         <i class="fa fa-edit ml-2"></i> Edit
                                     </a>
                                 </td>
-                                <td>
+                                <td th:if="${loggedInUser == project.owner.userId}">
                                     <a class="btn btn-primary"
                                        th:href="@{/project/delete/{id}(id=${project.projectId})}">
                                         <i class="fa fa-window-close ml-2"></i> Delete
                                     </a>
                                 </td>
+                                <!--                                <td>-->
+                                <!--                                    <a class="btn btn-primary" th:href="@{/project/edit/{id}(id=${project.projectId})}">-->
+                                <!--                                        <i class="fa fa-edit ml-2"></i> Edit-->
+                                <!--                                    </a>-->
+                                <!--                                </td>-->
+                                <!--                                <td>-->
+                                <!--                                    <a class="btn btn-primary"-->
+                                <!--                                       th:href="@{/project/delete/{id}(id=${project.projectId})}">-->
+                                <!--                                        <i class="fa fa-window-close ml-2"></i> Delete-->
+                                <!--                                    </a>-->
+                                <!--                                </td>-->
                             </tr>
                             </tbody>
                         </table>
@@ -108,4 +121,3 @@
 
 </body>
 </html>
-"

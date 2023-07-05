@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8">
+    <meta content="ie=edge" http-equiv="x-ua-compatible">
+    <title>Create New Project</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link th:href="@{/webjars/bootstrap/5.0.2/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/webjars/font-awesome/5.11.2/css/all.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#" th:href="@{/}">CNS</a>
+        <a class="navbar-brand" href="#" th:href="@{/project/list}">Projects</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link text-danger" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+
+<div class="container mt-4">
+    <h2>Edit Project</h2>
+    <form th:action="@{/project/update-project/{id}(id=${project.projectId})}" method="post" class="needs-validation"
+          novalidate>
+        <!--        <div class="form-group">-->
+        <!--            <label for="projectName">Project Name</label>-->
+        <!--            <input type="text" class="form-control" id="projectName" name="projectName" th:value="${project.projectName}" required>-->
+        <!--            <div class="invalid-feedback">-->
+        <!--                Please enter the project name.-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--        <div class="form-group">-->
+        <!--            <label for="projectIntro">Project Introduction</label>-->
+        <!--            <textarea class="form-control" id="projectIntro" name="projectIntro" rows="4" required th:text="${project.projectIntro}"></textarea>-->
+        <!--            <div class="invalid-feedback">-->
+        <!--                Please enter the project introduction.-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--&lt;!&ndash;        <div class="form-group">&ndash;&gt;-->
+        <!--&lt;!&ndash;            <label for="startDate">Start Date</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <input type="date" class="form-control" id="startDate" name="startDate" th:value="${project.startDate}" required>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <div class="invalid-feedback">&ndash;&gt;-->
+        <!--&lt;!&ndash;                Please enter the start date.&ndash;&gt;-->
+        <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--&lt;!&ndash;        </div>&ndash;&gt;-->
+        <!--&lt;!&ndash;        <div class="form-group">&ndash;&gt;-->
+        <!--&lt;!&ndash;            <label for="endDate">End Date</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <input type="date" class="form-control" id="endDate" name="endDate" th:value="${project.endDate}" required>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <div class="invalid-feedback">&ndash;&gt;-->
+        <!--&lt;!&ndash;                Please enter the end date.&ndash;&gt;-->
+        <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--&lt;!&ndash;        </div>&ndash;&gt;-->
+
+        <!--        <div class="form-group">-->
+        <!--            <label for="status">Status</label>-->
+        <!--            <select class="form-control" id="status" name="status" required>-->
+        <!--                <option value="Planning" th:selected="${project.status == 'Planning'}">Planning</option>-->
+        <!--                <option value="Ongoing" th:selected="${project.status == 'Ongoing'}">Ongoing</option>-->
+        <!--                <option value="Completed" th:selected="${project.status == 'Completed'}">Completed</option>-->
+        <!--            </select>-->
+        <!--            <div class="invalid-feedback">-->
+        <!--                Please select the project status.-->
+        <!--            </div>-->
+        <!--        </div>-->
+
+        <!--        <div class="form-group">-->
+        <!--            <label for="startDate">Start Date</label>-->
+        <!--            <input type="date" class="form-control" id="startDate" name="startDate" th:field="${project.startDate}" required>-->
+        <!--            <div class="invalid-feedback">-->
+        <!--                Please enter the start date.-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--        <div class="form-group">-->
+        <!--            <label for="endDate">End Date</label>-->
+        <!--            <input type="date" class="form-control" id="endDate" name="endDate" th:field="${project.endDate}" required>-->
+        <!--            <div class="invalid-feedback">-->
+        <!--                Please enter the end date.-->
+        <!--            </div>-->
+        <!--        </div>-->
+
+        <!-- Other HTML code -->
+
+        <div class="form-group">
+            <label for="projectName">Project Name</label>
+            <input type="text" class="form-control" id="projectName" name="projectName">
+            <div class="invalid-feedback">
+                Please enter the project name.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="projectIntro">Project Introduction</label>
+            <textarea class="form-control" id="projectIntro" name="projectIntro" rows="4"></textarea>
+            <div class="invalid-feedback">
+                Please enter the project introduction.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" class="form-control" id="startDate" name="startDate">
+            <div class="invalid-feedback">
+                Please enter the start date.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" class="form-control" id="endDate" name="endDate">
+            <div class="invalid-feedback">
+                Please enter the end date.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="Planning" th:selected="${project.status == 'Planning'}">Planning</option>
+                <option value="Ongoing" th:selected="${project.status == 'Ongoing'}">Ongoing</option>
+                <option value="Completed" th:selected="${project.status == 'Completed'}">Completed</option>
+            </select>
+            <div class="invalid-feedback">
+                Please select the project status.
+            </div>
+        </div>
+
+        <!-- Other HTML code -->
+
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+
+</body>
+</html>
