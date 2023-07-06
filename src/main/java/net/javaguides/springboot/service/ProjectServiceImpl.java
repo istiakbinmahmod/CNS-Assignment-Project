@@ -3,9 +3,16 @@ package net.javaguides.springboot.service;
 import net.javaguides.springboot.model.Project;
 import net.javaguides.springboot.model.User;
 import net.javaguides.springboot.repository.ProjectRepository;
+import net.javaguides.springboot.web.dto.ProjectInfoDto;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -70,6 +77,37 @@ public class ProjectServiceImpl implements ProjectService{
             a.getProjects().add(project);
         }
         return true;
+    }
+
+    @Override
+    public String exportReport(String reportFormat) throws FileNotFoundException, JRException {
+        List<Project> allProjects = projectRepository.findAll();
+        List<ProjectInfoDto> projectInfoDtoList = new ArrayList<>();
+        for(Project project : allProjects) {
+            ProjectInfoDto projectInfoDto = new ProjectInfoDto();
+            projectInfoDto.setId(project.getId());
+            projectInfoDto.setName(project.getName());
+            projectInfoDto.setIntro(project.getIntro());
+            projectInfoDto.setStatus(project.getStatus());
+            projectInfoDto.setOwner_email(project.getOwner().getEmail());
+            projectInfoDto.setStartDate(new SimpleDateFormat("dd/MM/yyyy").format(project.getStartDate()));
+            projectInfoDto.setEndDate(new SimpleDateFormat("dd/MM/yyyy").format(project.getEndDate()));
+            projectInfoDtoList.add(projectInfoDto);
+        }
+        //load file and compile it
+        File file = ResourceUtils.getFile("classpath:projects.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(projectInfoDtoList);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("createdBy", "CNS Limited");
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+        if(reportFormat.equalsIgnoreCase("html")) {
+            JasperExportManager.exportReportToHtmlFile(jasperPrint, "E:\\Reports\\projects.html");
+        }
+        if(reportFormat.equalsIgnoreCase("pdf")) {
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "E:\\Reports\\projects.pdf");
+        }
+        return "report generated in path : " + "E:\\Reports\\";
     }
 
 
