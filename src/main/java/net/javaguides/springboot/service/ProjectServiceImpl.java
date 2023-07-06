@@ -80,8 +80,14 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public String exportReport(String reportFormat) throws FileNotFoundException, JRException {
-        List<Project> allProjects = projectRepository.findAll();
+    public String exportReport(String reportFormat, Date start, Date end) throws FileNotFoundException, JRException {
+        List<Project> allProjects;
+        if (start != null && end != null) {
+            allProjects = fetchProjectListFiltered(start, end);
+        } else {
+            allProjects = projectRepository.findAll();
+        }
+//        List<Project> allProjects = projectRepository.findAll();
         List<ProjectInfoDto> projectInfoDtoList = new ArrayList<>();
         for(Project project : allProjects) {
             ProjectInfoDto projectInfoDto = new ProjectInfoDto();

@@ -26,7 +26,7 @@ public interface ProjectService {
 
     public boolean addMembersToProject(Project project, Set<User> users);
 
-    public String exportReport(String reportFormat) throws FileNotFoundException, JRException;
+    public String exportReport(String reportFormat, Date start, Date end) throws FileNotFoundException, JRException;
 
 
 }

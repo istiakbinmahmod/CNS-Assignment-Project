@@ -48,7 +48,8 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="filterStartDate">Start Date:</label>
-                                        <input type="date" class="form-control" id="filterStartDate" name="filterStartDate">
+                                        <input type="date" class="form-control" id="filterStartDate"
+                                               name="filterStartDate">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -95,26 +96,22 @@
                                         <i class="fa fa-edit ml-2"></i> Edit
                                     </a>
                                 </td>
-<!--                                <td th:if="${loggedInUser == project.owner.id}">-->
-<!--                                    <a class="btn btn-primary"-->
-<!--                                       th:href="@{/project/delete/{id}(id=${project.id})}">-->
-<!--                                        <i class="fa fa-window-close ml-2"></i> Delete-->
-<!--                                    </a>-->
-<!--                                </td>-->
                                 <td th:if="${loggedInUser == project.owner.id}">
-                                    <button class="btn btn-primary" th:attr="onclick='confirmDelete(\'' + ${project.id} + '\')'">
+                                    <button class="btn btn-primary"
+                                            th:attr="onclick='confirmDelete(\'' + ${project.id} + '\')'">
                                         <i class="fa fa-window-close ml-2"></i> Delete
                                     </button>
                                 </td>
-
-
-
-
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <p class="my-5">
+                    <a class="btn btn-primary" th:href="@{/report/pdf(filterStartDate=${filterStartDate}, filterEndDate=${filterEndDate})}">
+                        <i class="fa fa-file-pdf ml-2"></i> Generate Jasper Report
+                    </a>
+                </p>
             </div>
         </div>
     </div>
@@ -128,8 +125,6 @@
         }
     }
 </script>
-
-
 
 
 </body>
